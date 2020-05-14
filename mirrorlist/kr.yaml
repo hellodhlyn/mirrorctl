@@ -1,0 +1,8 @@
+bundler:
+  rubygems_org: http://mirror.kakao.com/rubygems
+pipenv:
+  pypi_mirror: http://mirror.kakao.com/pypi/simple
+pypi:
+  index_url: http://mirror.kakao.com/pypi/simple
+  extra_index_url: https://pypi.org/simple
+  trusted_host: mirror.kakao.com

@@ -27,3 +27,21 @@ Add a script below on your shell startup file like `~/.bash_profile`, `~/.zshrc`
 ```sh
 eval "$(mirrorctl export --location <location>)"
 ```
+
+## Development
+
+### Prerequisites
+
+- Go 1.14 (or greater)
+- [Pkger](https://github.com/markbates/pkger)
+
+### Build
+
+```sh
+# Build binary
+pkger -include /mirrorlist
+go build -o dist/mirrorctl
+
+# Run command
+./dist/mirrorctl --help
+```

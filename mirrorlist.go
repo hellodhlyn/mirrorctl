@@ -1,74 +1,66 @@
 package main
 
+import (
+	"errors"
+	"fmt"
+	"io/ioutil"
+	"strings"
+
+	"github.com/markbates/pkger"
+	"gopkg.in/yaml.v2"
+)
+
 type (
 	Source interface {
 		EnvVars() map[string]string
 	}
 
 	Bundler struct {
-		Rubygems string
+		Rubygems string `yaml:"rubygems_org"`
 	}
 
 	Pipenv struct {
-		PypiMirror string
+		PypiMirror string `yaml:"pypi_mirror"`
 	}
 
 	Pypi struct {
-		IndexUrl      string
-		ExtraIndexUrl string
-		TrustedHost   string
+		IndexUrl      string `yaml:"index_url"`
+		ExtraIndexUrl string `yaml:"extra_index_url"`
+		TrustedHost   string `yaml:"trusted_host"`
 	}
 
 	Mirrorlist struct {
-		Bundler *Bundler
-		Pipenv  *Pipenv
-		Pypi    *Pypi
+		Bundler *Bundler `yaml:"bundler"`
+		Pipenv  *Pipenv  `yaml:"pipenv"`
+		Pypi    *Pypi    `yaml:"pypi"`
 	}
 )
 
-var (
-	// Default
-	defaultBundler = Bundler{
-		Rubygems: "https://rubygems.org",
-	}
-	defaultPipenv = Pipenv{
-		PypiMirror: "https://pypi.org/simple",
-	}
-	defaultPypi = Pypi{
-		IndexUrl: "https://pypi.org/simple",
-	}
-	defaultMirror = Mirrorlist{
-		Bundler: &defaultBundler,
-		Pipenv:  &defaultPipenv,
-		Pypi:    &defaultPypi,
-	}
-
-	// Korea (korea)
-	krBundler = Bundler{
-		Rubygems: "http://mirror.kakao.com/rubygem",
-	}
-	krPipenv = Pipenv{
-		PypiMirror: "http://mirror.kakao.com/pypi/simple",
-	}
-	krPypi = Pypi{
-		IndexUrl:      "http://mirror.kakao.com/pypi/simple",
-		ExtraIndexUrl: "https://pypi.org/simple",
-		TrustedHost:   "mirror.kakao.com",
-	}
-	krMirror = Mirrorlist{
-		Bundler: &krBundler,
-		Pipenv:  &krPipenv,
-		Pypi:    &krPypi,
-	}
-)
-
-func GetMirrorlist(location string) *Mirrorlist {
-	switch location {
-	case "kr", "korea":
-		return &krMirror
+func GetMirrorlist(location string) (*Mirrorlist, error) {
+	var locationCode string
+	switch strings.ToLower(location) {
+	case "kr", "korea", "south_korea":
+		locationCode = "kr"
 	default:
-		return &defaultMirror
+		locationCode = "default"
 	}
+
+	f, err := pkger.Open(fmt.Sprintf("/mirrorlist/%s.yaml", locationCode))
+	if err != nil {
+		return nil, errors.New("failed to load mirrorlist")
+	}
+
+	bytes, err := ioutil.ReadAll(f)
+	if err != nil {
+		return nil, errors.New("failed to read mirrorlist")
+	}
+
+	var mirrorlist Mirrorlist
+	if yaml.Unmarshal(bytes, &mirrorlist) != nil {
+		return nil, errors.New("failed to parse mirrorlist")
+	}
+
+	return &mirrorlist, nil
 }
 
 func (b *Bundler) EnvVars() map[string]string {

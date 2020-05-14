@@ -1,0 +1,6 @@
+bundler:
+  rubygems_org: https://rubygems.org
+pipenv:
+  pypi_mirror: https://pypi.org/simple
+pypi:
+  index_url: https://pypi.org/simple

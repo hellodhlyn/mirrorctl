@@ -15,7 +15,12 @@ var exportCmd = &cobra.Command{
 	Use:   "export",
 	Short: "Print out shell scripts to set mirrors. (Usage: eval \"mirrorctl export\")",
 	Run: func(cmd *cobra.Command, args []string) {
-		mirrorlist := GetMirrorlist(location)
+		mirrorlist, err := GetMirrorlist(location)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+
 		for k, v := range mirrorlist.EnvVarsAll() {
 			fmt.Printf("export %s=%s\n", k, v)
 		}

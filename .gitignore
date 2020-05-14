@@ -25,5 +25,9 @@
 
 # End of https://www.gitignore.io/api/go
 
+pkged.go
+
 .code/
 .idea/
+
+dist/
