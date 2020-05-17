@@ -65,7 +65,7 @@ func GetMirrorlist(location string) (*Mirrorlist, error) {
 
 func (b *Bundler) EnvVars() map[string]string {
 	return compactMap(map[string]string{
-		"BUNDLER_RUBYGEMS__ORG": b.Rubygems,
+		"BUNDLE_MIRROR__RUBYGEMS__ORG": b.Rubygems,
 	})
 }
 
