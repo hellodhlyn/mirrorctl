@@ -1,0 +1,19 @@
+on:
+  push:
+    tags:
+    - 'v*'
+name: Create release
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Create release
+      uses: actions/create-release@v1
+      env:
+        # Required a personal access token, not GITHUB_TOKEN provided from GitHub Actions.
+        # See: https://github.community/t/github-action-trigger-on-release-not-working-if-releases-was-created-by-automation/16559
+        GITHUB_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
