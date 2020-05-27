@@ -14,17 +14,19 @@ If you set an invalid location code, it will be set to default repository urls.
 
 - Korea (`kr`, `korea`)
 
-## Getting Started
+## Usage
 
-### Installation
-
-TBD
-
-### Usage
-
-Add a script below on your shell startup file like `~/.bash_profile`, `~/.zshrc` `~/.profile`.
+Download a binary from the [releases page](https://github.com/hellodhlyn/mirrorctl/releases).
 
 ```sh
+tar -xzf mirrorctl_XXX.tar.gz
+cp mirrorctl /usr/bin
+```
+
+Add a script below on your shell startup file like `~/.bash_profile`, `~/.zshrc`, or `~/.profile`.
+
+```sh
+# Set your own location code instead of <location>.
 eval "$(mirrorctl export --location <location>)"
 ```
 
